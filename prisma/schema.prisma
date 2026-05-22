@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model KnowledgeItem {
+  id        String   @id @default(cuid())
+  title     String   @unique
+  category  Category
+  content   String
+  source    String
+  tags      String[] @default([])
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  questions Question[]
+
+  @@index([category])
+  @@index([published])
+}
+
+model Question {
+  id              String         @id @default(cuid())
+  text            String
+  answer          String
+  matchedItemId   String?
+  matchedItem     KnowledgeItem? @relation(fields: [matchedItemId], references: [id], onDelete: SetNull)
+  confidenceScore Float          @default(0)
+  createdAt       DateTime       @default(now())
+}
+
+enum Category {
+  PROGRAM_OVERVIEW
+  COURSES
+  TEACHING_FORMAT
+  TUITION
+  SCHEDULE
+  ADMISSIONS
+  ENROLLMENT
+}
