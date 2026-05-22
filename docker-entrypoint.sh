@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
 
-npx prisma migrate deploy
-npx prisma db seed
+./node_modules/.bin/prisma migrate deploy
+./node_modules/.bin/prisma db seed
 node server.js
